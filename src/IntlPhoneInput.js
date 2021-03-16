@@ -25,8 +25,7 @@ export default class IntlPhoneInput extends React.Component {
       phoneNumber: '',
       mask: defaultCountry.mask,
       countryData: data,
-      selectedCountry:defaultCountry,
-      placeholderTextColor: 'grey'
+      selectedCountry:defaultCountry
     };
   }
 
@@ -101,7 +100,10 @@ export default class IntlPhoneInput extends React.Component {
   filterCountries = (value) => {
    const { lang
   } = this.props;
+  value = value[0].toUpperCase() + value.slice(1);
+  // console.log(value)
     const countryData = data.filter((obj) => (obj[lang?.toLowerCase()??"en"]?.indexOf(value) > -1 || obj.dialCode.indexOf(value) > -1));
+    console.log(countryData)
     this.setState({ countryData });
   }
 
@@ -122,15 +124,16 @@ export default class IntlPhoneInput extends React.Component {
       filterText,
       searchIconStyle,
       closeButtonStyle,
-      lang,
-      placeholderTextColor
+      lang
     } = this.props;
+    
     return (
       <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
         <SafeAreaView style={{ flex: 1 }}>
         <View style={[styles.modalContainer, modalContainer]}>
           <View style={styles.filterInputStyleContainer}>
-            <TextInput autoFocus onChangeText={this.filterCountries} placeholder={filterText || 'Filter'} style={[styles.filterInputStyle, filterInputStyle]} placeholderTextColor={placeholderTextColor }/>
+            <TextInput autoFocus onChangeText={this.filterCountries} autoCapitalize
+             placeholder={filterText || 'Filter'} style={[styles.filterInputStyle, filterInputStyle]} />
             <Text style={[styles.searchIconStyle, searchIconStyle]}>🔍</Text>
           </View>
           <FlatList
@@ -163,7 +166,6 @@ export default class IntlPhoneInput extends React.Component {
 renderAction=()=>{
   const renderAction=this.props.renderAction;
   if(renderAction) {
-    console.log("action",renderAction);
     if(typeof renderAction!=="function") throw ("The renderAction is not a function. Please set a renderAction function on there");
     else return this.props.renderAction();
   }
@@ -177,8 +179,7 @@ renderAction=()=>{
       flagStyle,
       phoneInputStyle,
       dialCodeTextStyle,
-      inputProps,
-      placeholderTextColor
+      inputProps
     } = this.props;
     return (
       <View style={{ ...styles.container, ...containerStyle }}>
@@ -198,7 +199,6 @@ renderAction=()=>{
           secureTextEntry={false}
           value={this.state.phoneNumber}
           onChangeText={this.onChangeText}
-          placeholderTextColor={placeholderTextColor}
         />
         {this.renderAction()}
 
@@ -227,7 +227,6 @@ IntlPhoneInput.propTypes = {
   searchIconStyle: PropTypes.object,
   disableCountryChange: PropTypes.bool,
   inputRef: PropTypes.object,
-  placeholderTextColor: PropTypes.string
 };
 
 const styles = StyleSheet.create({
